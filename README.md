@@ -1,0 +1,1 @@
+# stalker-coverage-test

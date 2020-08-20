@@ -1,0 +1,3 @@
+[submodule "stalker-coverage"]
+	path = stalker-coverage
+	url = https://github.com/WorksButNotTested/stalker-coverage.git
