@@ -1,4 +1,5 @@
 import { Coverage } from "../node_modules/stalker-coverage/dist/coverage";
+import { CoverageSession } from "../node_modules/stalker-coverage/dist/session";
 /*
  * This sample replaces the 'main' function of the target application with one which starts
  * collecting coverage information, before calling the original 'main' function. Once the
@@ -41,17 +42,17 @@ const mainReplacement: NativeCallback = new NativeCallback(
         const coverageFileName: string = `${mainModule.path}.dat`;
         const coverageFile: File = new File(coverageFileName, "wb+");
 
-        Coverage.follow(Process.id, {
-            moduleFilter: (module: Module): boolean => module.path === mainModule.path,
+        const coverage: CoverageSession = Coverage.follow({
+            moduleFilter: (m: Module): boolean => Coverage.MainModule(m),
             onCoverage: (coverageData: ArrayBuffer): void => {
                 coverageFile.write(coverageData);
-                coverageFile.flush();
-            }});
+            },
+            threadFilter: (t: ThreadDetails): boolean => Coverage.CurrentThread(t),
+        });
 
         const ret: number = mainFunctionPointer(argc, argv) as number;
 
-        Coverage.unfollow();
-        Coverage.flush();
+        coverage.stop();
         coverageFile.close();
 
         return ret;

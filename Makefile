@@ -56,6 +56,6 @@ gadget: $(GADGET_SO)
 $(GADGET_CONFIG): $(PWD)src/frida-gadget.config | $(BIN_DIR)
 	cp $< $@
 
-run:
+run: $(TEST_BIN) $(GADGET_SO) $(GADGET_CONFIG) $(AGENT_BIN)
 	LD_PRELOAD=$(GADGET_SO) $(TEST_BIN) 123
 	hexdump -C $(TEST_BIN).dat
